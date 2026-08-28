@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+`  <title>BankPilot | 個人助理控制台</title>
+  <style>
+    :root { --ink:#172128; --muted:#65737b; --paper:#f6f8f5; --panel:#fff; --line:#dce5e1; --mint:#bce8d6; --green:#127c62; --yellow:#f5bf4d; --red:#d75b4b; --blue:#4073a8; --shadow:0 16px 45px rgba(22,43,39,.08); }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family: Georgia, 'Noto Serif TC', serif; }
+    button, input { font:inherit; }
+    button { cursor:pointer; }
+    .app { max-width:1440px; margin:0 auto; padding:24px 30px 34px; }
+    header { display:flex; justify-content:space-between; align-items:center; gap:20px; padding:5px 0 24px; border-bottom:1px solid var(--line); }
+    .brand { display:flex; gap:13px; align-items:center; }
+    .brand-mark { width:39px; height:39px; display:grid; place-items:center; border-radius:12px; background:var(--ink); color:var(--mint); font:700 18px Arial,sans-serif; }
+    .brand h1 { margin:0; font-size:22px; letter-spacing:.01em; }
+    .brand p { margin:4px 0 0; color:var(--muted); font:12px Arial,sans-serif; }
+    .status { display:flex; align-items:center; gap:8px; color:var(--green); font:700 12px Arial,sans-serif; }
+    .mode-switch { display:flex; gap:4px; padding:4px; border:1px solid var(--line); border-radius:6px; background:#fff; }
+    .mode-switch button { padding:8px 11px; border:0; border-radius:3px; background:transparent; color:var(--muted); font:700 12px Arial,sans-serif; }
+    .mode-switch button.active { background:var(--ink); color:#fff; }
+    .dot { width:8px; height:8px; background:#43b98d; border-radius:50%; box-shadow:0 0 0 4px #d9f4e9; }
+    main { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(300px,.8fr); gap:22px; padding-top:24px; }
+    .panel { background:var(--panel); border:1px solid var(--line); box-shadow:var(--shadow); border-radius:8px; }
+    .conversation { min-height:690px; display:flex; flex-direction:column; overflow:hidden; }
+    .panel-head { padding:19px 22px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+    .panel-head h2 { margin:0; font-size:17px; }
+    .case-meta { font:12px Arial,sans-serif; color:var(--muted); }
+    .messages { flex:1; padding:24px; overflow:auto; min-height:420px; }
+    .message { max-width:79%; margin:0 0 18px; animation:rise .35s ease both; }
+    .message.agent { margin-right:auto; }
+    .message.user { margin-left:auto; text-align:right; }
+    .bubble { display:inline-block; padding:14px 16px; line-height:1.65; border-radius:5px 15px 15px 15px; background:#eef5f1; text-align:left; }
+    .user .bubble { background:var(--ink); color:white; border-radius:15px 5px 15px 15px; }
+    .message small { display:block; margin-top:6px; color:var(--muted); font:11px Arial,sans-serif; }
+    .user small { text-align:right; }
+    .composer { padding:17px 20px 20px; border-top:1px solid var(--line); }
+    .quick-actions { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .quick-actions button { padding:8px 11px; border:1px solid var(--line); border-radius:3px; background:#fff; color:var(--blue); font:12px Arial,sans-serif; }
+    .quick-actions button:hover { border-color:var(--blue); background:#f2f7fb; }
+    .input-row { display:flex; gap:9px; }
+    input { width:100%; padding:13px 14px; border:1px solid var(--line); border-radius:4px; outline:none; color:var(--ink); }
+    input:focus { border-color:var(--green); box-shadow:0 0 0 3px #e1f5ed; }
+    .send { padding:0 19px; border:0; border-radius:4px; background:var(--green); color:#fff; font:700 13px Arial,sans-serif; }
+    .side { display:flex; flex-direction:column; gap:15px; }
+    .side-panel { padding:19px; }
+    .side-panel h3 { margin:0 0 16px; font-size:15px; }
+    .risk { display:flex; justify-content:space-between; align-items:center; padding-bottom:16px; border-bottom:1px solid var(--line); }
+    .risk strong { display:block; margin-top:4px; font:700 21px Arial,sans-serif; }
+    .risk-badge { padding:6px 9px; border-radius:3px; color:#8a3c2f; background:#ffe9e3; font:700 11px Arial,sans-serif; }
+    .meter { height:6px; margin:14px 0 16px; border-radius:10px; background:#edf0ee; overflow:hidden; }
+    .meter span { display:block; width:86%; height:100%; background:var(--red); }
+    .check-list, .log { list-style:none; padding:0; margin:0; }
+    .check-list li { display:flex; align-items:center; gap:9px; padding:8px 0; color:#46565d; font:12px Arial,sans-serif; }
+    .check { display:grid; place-items:center; width:17px; height:17px; border-radius:50%; background:#d9f4e9; color:var(--green); font-size:11px; }
+    .check.pending { background:#fff3d2; color:#ad7b13; }
+    .event { display:flex; gap:10px; padding:11px 0; border-bottom:1px solid #edf1ef; }
+    .event:last-child { border:0; padding-bottom:0; }
+    .event-time { min-width:42px; color:#8b989a; font:10px Arial,sans-serif; }
+    .event p { margin:0; color:#46565d; font:12px/1.45 Arial,sans-serif; }
+    .event b { color:var(--ink); }
+    .approval { background:#fffaf0; border-color:#f2ddb1; }
+    .approval p { margin:0 0 13px; color:#745d28; font:12px/1.55 Arial,sans-serif; }
+    .approval button { width:100%; padding:11px; border:0; border-radius:3px; background:var(--yellow); color:#533c0e; font:700 12px Arial,sans-serif; }
+    .approval button:disabled { opacity:.55; cursor:not-allowed; }
+    .footer-note { margin-top:17px; color:#8b989a; text-align:center; font:11px Arial,sans-serif; }
+    @keyframes rise { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:none; } }
+    @media (max-width:850px) { .app { padding:17px 14px 24px; } header { align-items:flex-start; } main { grid-template-columns:1fr; } .conversation { min-height:620px; } .side { display:grid; grid-template-columns:1fr 1fr; } .approval { grid-column:1/-1; } }
+    @media (max-width:530px) { .status { font-size:0; } .status .dot { margin-right:3px; } .side { display:flex; } .message { max-width:91%; } .input-row { flex-direction:column; } .send { padding:12px; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand"><div class="brand-mark">BP</div><div><h1 id="brandTitle">BankPilot</h1><p id="brandSubtitle">AI Agent Team for trusted banking support</p></div></div>
+      <div class="mode-switch" aria-label="助理模式"><button class="active" data-mode="banking">銀行客服</button><button data-mode="personal">個人助理</button></div>
+    </header>
+    <main>
+      <section class="panel conversation">
+        <div class="panel-head"><h2 id="conversationTitle">客服對話</h2><span class="case-meta" id="caseMeta">案件 BP-2026-0828 · 王小姐</span></div>
+        <div class="messages" id="messages">
+          <div class="message agent"><div class="bubble">您好，我是 BankPilot。我可以協助查詢交易、處理卡片安全問題，或追蹤貸款案件。今天想先處理什麼呢？</div><small>BankPilot · Triage Agent</small></div>
+          <div class="message user"><div class="bubble">我剛剛看到一筆不是我刷的 8,800 元交易，請幫我處理。</div><small>剛剛</small></div>
+          <div class="message agent"><div class="bubble">我已辨識這是「疑似信用卡盜刷」事件，風險等級為高。為保護帳戶，我會先進行身分驗證，再查詢這筆交易。驗證完成後，停卡需要您的明確確認。</div><small>BankPilot · Triage Agent</small></div>
+          <div class="message agent"><div class="bubble">身分驗證已完成。我找到一筆今日 14:32、商店「NOVA DIGITAL」、金額 NT$8,800 的待授權交易。您要暫停此卡並建立爭議款案件嗎？</div><small>Banking Agent · Verification Agent</small></div>
+        </div>
+        <div class="composer">
+          <div class="quick-actions" id="quickActions"><button data-action="fraud">確認停卡並建案</button><button data-action="transactions">查詢最近交易</button><button data-action="human">轉接真人客服</button></div>
+          <div class="input-row"><input id="input" placeholder="輸入您的問題，例如：我想查最近一筆轉帳" autocomplete="off"><button class="send" id="send">送出</button></div>
+        </div>
+      </section>
+      <aside class="side">
+        <section class="panel side-panel">
+          <h3 id="sideStatusTitle">案件風險評估</h3>
+          <div class="risk"><div><span class="case-meta">目前風險分數</span><strong id="riskScore">86 / 100</strong></div><span class="risk-badge" id="riskLabel">高風險</span></div>
+          <div class="meter"><span id="meter"></span></div>
+          <ul class="check-list" id="checks"><li><span class="check">✓</span>意圖分類：疑似盜刷</li><li><span class="check">✓</span>多因素身分驗證</li><li><span class="check pending">!</span>等待客戶確認停卡</li></ul>
+        </section>
+        <section class="panel side-panel">
+          <h3>Agent Audit Log</h3>
+          <ul class="log" id="log"><li class="event"><span class="event-time">14:36:08</span><p><b>Verification Agent</b><br>完成 MFA 驗證，可信度 98%</p></li><li class="event"><span class="event-time">14:36:11</span><p><b>Banking Agent</b><br>查詢交易 API · 1 筆結果</p></li><li class="event"><span class="event-time">14:36:12</span><p><b>Policy Engine</b><br>高風險動作需二次確認</p></li></ul>
+        </section>
+        <section class="panel side-panel approval" id="approvalPanel"><h3>需要人工核准的動作</h3><p>停卡與爭議款建案會改變帳戶狀態。客戶已確認後，才可執行這個受控流程。</p><button id="approve" disabled>等待客戶確認</button></section>
+      </aside>
+    </main>
+    <div class="footer-note">Demo mode · 所有資料皆為模擬資料，不會連接真實銀行帳戶</div>
+  </div>
+  <script>
+    const messages = document.querySelector('#messages');
+    const log = document.querySelector('#log');
+    const input = document.querySelector('#input');
+    const approve = document.querySelector('#approve');
+    const checks = document.querySelector('#checks');
+    const quickActions = document.querySelector('#quickActions');
+    const modeButtons = document.querySelectorAll('[data-mode]');
+    let mode = 'banking';
+    const now = () => new Date().toLocaleTimeString('zh-TW', { hour12:false });
+    function addMessage(text, type, agent = '') {
+      const item = document.createElement('div'); item.className = `message ${type}`;
+      item.innerHTML = `<div class="bubble"></div><small>${type === 'user' ? '您' : agent}</small>`;
+      item.querySelector('.bubble').textContent = text; messages.append(item); messages.scrollTop = messages.scrollHeight;
+    }
+    function addLog(agent, detail) {
+      const item = document.createElement('li'); item.className = 'event';
+      item.innerHTML = `<span class="event-time">${now()}</span><p><b>${agent}</b><br>${detail}</p>`; log.prepend(item);
+    }
+    function fraudFlow() {
+      addMessage('確認，請幫我停卡並建立爭議款案件。', 'user');
+      setTimeout(() => { addMessage('已收到明確確認。我會先暫停卡片交易，再建立爭議款案件。', 'agent', 'Workflow Agent'); addLog('Workflow Agent', '取得客戶明確同意，準備執行受控流程'); approve.disabled = false; approve.textContent = '核准執行停卡與建案'; checks.innerHTML = '<li><span class="check">✓</span>意圖分類：疑似盜刷</li><li><span class="check">✓</span>多因素身分驗證</li><li><span class="check">✓</span>客戶已明確確認</li>'; }, 500);
+    }
+    function transactions() { addMessage('我想查詢最近的交易紀錄。', 'user'); setTimeout(() => { addMessage('最近三筆交易：咖啡研究室 NT$145、城市交通 NT$60、NOVA DIGITAL NT$8,800（待授權）。你可以點選任一筆查看細節。', 'agent', 'Banking Agent'); addLog('Banking Agent', '查詢交易 API · 回傳最近 3 筆交易'); }, 500); }
+    function humanFlow() { addMessage('請轉接真人客服，我希望有人協助。', 'user'); setTimeout(() => { addMessage('好的，我已建立優先案件並整理好對話摘要。真人客服將接手，您不需要重複說明。預估等待時間約 2 分鐘。', 'agent', 'Human Handoff Agent'); addLog('Human Handoff Agent', '建立優先案件 · 摘要已附加 · SLA 2 分鐘'); }, 500); }
+    function personalFlow(action) {
+      const flows = {
+        agenda: ['請整理我今天的安排。', '今天有 3 個待辦：09:30 專案同步、13:00 回覆客戶信件、18:30 運動。最先需要處理的是專案同步。', 'Calendar Agent', '讀取今日行程 · 3 個項目'],
+        reminder: ['提醒我明天早上九點開會。', '好的，已建立提醒：「明天 09:00 開會」，我會在 08:30 提醒您。', 'Reminder Agent', '建立提醒 · 觸發時間 2026-09-05 08:30'],
+        note: ['幫我記錄：下週要準備提案簡報。', '已記錄備忘：「下週要準備提案簡報」。需要我在下週一早上提醒您嗎？', 'Notes Agent', '新增備忘 · 已同步至個人筆記']
+      };
+      const [request, reply, agent, detail] = flows[action];
+      addMessage(request, 'user'); setTimeout(() => { addMessage(reply, 'agent', agent); addLog(agent, detail); }, 450);
+    }
+    function setMode(nextMode) {
+      mode = nextMode;
+      modeButtons.forEach(button => button.classList.toggle('active', button.dataset.mode === mode));
+      const personal = mode === 'personal';
+      document.querySelector('.status').innerHTML = `<span class="dot"></span>${personal ? '個人助理服務已就緒' : '模擬銀行 API 已連線'}`;
+      document.querySelector('#conversationTitle').textContent = personal ? '個人助理對話' : '客服對話';
+      document.querySelector('#caseMeta').textContent = personal ? '工作區 PA-2026-0904 · Eason' : '案件 BP-2026-0828 · 王小姐';
+      document.querySelector('#brandSubtitle').textContent = personal ? 'Your calm command center for everyday tasks' : 'AI Agent Team for trusted banking support';
+      document.querySelector('#sideStatusTitle').textContent = personal ? '助理工作狀態' : '案件風險評估';
+      document.querySelector('#riskScore').textContent = personal ? '就緒' : '86 / 100';
+      document.querySelector('#riskLabel').textContent = personal ? '低風險' : '高風險';
+      document.querySelector('#riskLabel').style.color = personal ? 'var(--green)' : '';
+      document.querySelector('#riskLabel').style.background = personal ? '#d9f4e9' : '';
+      document.querySelector('#meter').style.width = personal ? '28%' : '86%';
+      document.querySelector('#meter').style.background = personal ? 'var(--green)' : 'var(--red)';
+      checks.innerHTML = personal ? '<li><span class="check">✓</span>今日行程已同步</li><li><span class="check">✓</span>提醒服務可用</li><li><span class="check">✓</span>個人筆記已連線</li>' : '<li><span class="check">✓</span>意圖分類：疑似盜刷</li><li><span class="check">✓</span>多因素身分驗證</li><li><span class="check pending">!</span>等待客戶確認停卡</li>';
+      document.querySelector('#approvalPanel').hidden = personal;
+      quickActions.innerHTML = personal ? '<button data-personal="agenda">整理今日安排</button><button data-personal="reminder">建立明日提醒</button><button data-personal="note">記錄一則備忘</button>' : '<button data-action="fraud">確認停卡並建案</button><button data-action="transactions">查詢最近交易</button><button data-action="human">轉接真人客服</button>';
+      quickActions.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => ({ fraud:fraudFlow, transactions, human:humanFlow }[button.dataset.action])()));
+      quickActions.querySelectorAll('[data-personal]').forEach(button => button.addEventListener('click', () => personalFlow(button.dataset.personal)));
+      if (personal) addMessage('你好，我是你的個人助理。我可以整理行程、建立提醒，也能把想法記成備忘。今天先從哪件事開始？', 'agent', 'Personal Assistant');
+    }
+    modeButtons.forEach(button => button.addEventListener('click', () => setMode(button.dataset.mode)));
+    document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => ({ fraud:fraudFlow, transactions, human:humanFlow }[button.dataset.action])()));
+    document.querySelector('#send').addEventListener('click', () => { const text = input.value.trim(); if (!text) return; addMessage(text, 'user'); input.value = ''; setTimeout(() => { const reply = mode === 'personal' ? (/提醒|記得|明天/.test(text) ? '我可以替你建立提醒。請告訴我具體日期、時間，以及要提醒的內容。' : /行程|安排|待辦/.test(text) ? '我正在整理你的今日安排，目前有 3 個待辦事項。你也可以使用下方快捷操作查看。' : '我可以協助整理行程、建立提醒，或記錄備忘。請直接告訴我想完成的事情。') : (/交易|扣款|轉帳/.test(text) ? '我正在使用 Banking Agent 查詢模擬交易資料。為了保護您的帳戶，涉及停卡或資金異動的操作仍需要您的明確確認。' : '我已將需求交給 Triage Agent 分析。這個 Demo 可以協助交易查詢、疑似盜刷處理，或轉接真人客服。'); addMessage(reply, 'agent', mode === 'personal' ? 'Personal Assistant' : 'Triage Agent'); addLog(mode === 'personal' ? 'Personal Assistant' : 'Triage Agent', '分析客戶訊息 · 已選擇對應工作流程'); }, 450); });
+    input.addEventListener('keydown', event => { if (event.key === 'Enter') document.querySelector('#send').click(); });
+    approve.addEventListener('click', () => { approve.disabled = true; approve.textContent = '流程已完成'; addMessage('停卡已完成，爭議款案件 BP-DISPUTE-4821 已建立。我們已將處理摘要寄送至您的註冊信箱。', 'agent', 'Workflow Agent'); addLog('Workflow Agent', '停卡成功 · 建立爭議款 BP-DISPUTE-4821'); });
+  </script>
+</body>
+</html>
