@@ -51,19 +51,19 @@
     .avatar-label { position:absolute; z-index:2; top:18px; left:20px; color:var(--muted); font:700 10px Arial,sans-serif; letter-spacing:.12em; text-transform:uppercase; }
     .avatar-status { position:absolute; z-index:2; right:20px; top:18px; padding:5px 8px; border:1px solid #d8c1ae; border-radius:3px; background:#fffaf5; color:#765442; font:700 10px Arial,sans-serif; }
     .avatar { position:relative; z-index:1; width:112px; height:132px; margin:20px auto 0; transform-style:preserve-3d; translate:var(--body-x,0px) var(--body-y,0px); rotate:var(--body-angle,0deg); animation:float 4s ease-in-out infinite; transition:filter .3s ease,translate .18s ease-out,rotate .25s ease-out; }
-    .avatar-orb { position:absolute; left:8px; top:6px; width:96px; height:96px; display:grid; place-items:center; border:3px solid #000; border-radius:50%; background:#050505; box-shadow:inset -13px -15px 0 rgba(255,255,255,.08), inset 8px 8px 0 rgba(255,255,255,.2), var(--shadow-x,9px) var(--shadow-y,14px) 0 rgba(0,0,0,var(--shadow-opacity,.16)); transform:rotateY(-12deg); transform-style:preserve-3d; overflow:hidden; transition:box-shadow .2s ease-out; }
-    .orb-title { position:static; width:auto; color:#fff; text-align:center; font:700 21px Arial,sans-serif; letter-spacing:.04em; text-shadow:0 0 8px rgba(255,255,255,.6); transform:translate(var(--eye-x,0px),var(--eye-y,0px)); transition:transform .18s ease-out; }
+    .avatar-orb { position:absolute; left:8px; top:6px; width:96px; height:96px; display:grid; place-items:center; border:3px solid #ff0f78; border-radius:50%; background:#ff2d8d; box-shadow:inset -13px -15px 0 rgba(184,0,83,.24), inset 8px 8px 0 rgba(255,255,255,.28), var(--shadow-x,9px) var(--shadow-y,14px) 0 rgba(255,15,120,var(--shadow-opacity,.16)); transform:rotateY(-12deg); transform-style:preserve-3d; overflow:hidden; transition:box-shadow .2s ease-out; }
+    .orb-title { position:static; width:auto; color:#fff; text-align:center; font:700 21px Arial,sans-serif; letter-spacing:.04em; text-shadow:0 0 8px rgba(255,255,255,.7); transform:translate(var(--eye-x,0px),var(--eye-y,0px)); transition:transform .18s ease-out; }
     .avatar.thinking { animation:think 1.1s ease-in-out infinite; filter:contrast(1.15); }
     .avatar.thinking .orb-title { animation:bp-blink .55s ease-in-out infinite alternate; }
     .avatar.speaking { animation:speak .38s ease-in-out infinite alternate; }
     .avatar.speaking .dot-matrix i.lit { animation:pulse-dot .38s ease-in-out infinite alternate; }
     .avatar.idle .avatar-orb { animation:idle-glow 3.2s ease-in-out infinite; }
-    .avatar.personal .avatar-orb { background:#050505; }
+    .avatar.personal .avatar-orb { background:#ff2d8d; }
     @keyframes float { 50% { transform:translateY(-5px) rotateY(5deg); } }
     @keyframes think { 50% { transform:translateY(-4px) rotateY(-12deg) rotateZ(-3deg); } }
     @keyframes speak { from { transform:translateY(0) scaleY(1); } to { transform:translateY(-3px) scaleY(1.035); } }
-    @keyframes idle-glow { 50% { box-shadow:inset -13px -15px 0 rgba(58,25,13,.24), inset 8px 8px 0 rgba(255,238,215,.22), var(--shadow-x,9px) var(--shadow-y,14px) 0 rgba(74,39,20,var(--shadow-opacity,.16)), 0 0 20px rgba(255,208,163,.28); } }
-    @keyframes bp-blink { from { opacity:.72; } to { opacity:1; text-shadow:0 0 12px #fff; } }
+    @keyframes idle-glow { 50% { box-shadow:inset -13px -15px 0 rgba(184,0,83,.24), inset 8px 8px 0 rgba(255,255,255,.28), var(--shadow-x,9px) var(--shadow-y,14px) 0 rgba(255,15,120,var(--shadow-opacity,.16)), 0 0 24px rgba(255,45,141,.55); } }
+    @keyframes bp-blink { from { opacity:.72; } to { opacity:1; text-shadow:0 0 12px #fff, 0 0 20px #ffb3d5; } }
     @keyframes pulse-dot { to { transform:scale(1.3); } }
     @media (prefers-reduced-motion:reduce) { .avatar, .avatar.idle .avatar-orb, .avatar.thinking .orb-title { animation:none; } }
     .risk { display:flex; justify-content:space-between; align-items:center; padding-bottom:16px; border-bottom:1px solid var(--line); }
@@ -98,7 +98,7 @@
     </header>
     <main>
       <section class="panel conversation">
-        <div class="avatar-stage" id="avatarStage" aria-label="黑白 BP 圓形 AI 助理模型"><span class="avatar-label">Live Agent Form</span><span class="avatar-status" id="avatarStatus">待命中</span><div class="avatar idle" id="avatar"><div class="avatar-orb"><div class="orb-title">BP</div></div></div></div>
+        <div class="avatar-stage" id="avatarStage" aria-label="亮粉紅 BP 圓形 AI 助理模型"><span class="avatar-label">Live Agent Form</span><span class="avatar-status" id="avatarStatus">待命中</span><div class="avatar idle" id="avatar"><div class="avatar-orb"><div class="orb-title">BP</div></div></div></div>
         <div class="panel-head"><h2 id="conversationTitle">客服對話</h2><span class="case-meta" id="caseMeta">案件 BP-2026-0828 · 王小姐</span></div>
         <div class="messages" id="messages">
           <div class="message agent"><div class="bubble">您好，我是 BankPilot。我可以協助查詢交易、處理卡片安全問題，或追蹤貸款案件。今天想先處理什麼呢？</div><small>BankPilot · Triage Agent</small></div>
