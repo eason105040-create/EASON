@@ -118,7 +118,7 @@
     <main>
       <section class="panel conversation">
         <div class="avatar-stage" id="avatarStage" aria-label="亮粉紅 BP 圓形 AI 助理模型"><span class="avatar-label">Live Agent Form</span><span class="avatar-status" id="avatarStatus">待命中</span><div class="avatar idle" id="avatar"><div class="avatar-orb"><div class="orb-title">BP</div></div></div></div>
-        <div class="panel-head"><h2 id="conversationTitle">客服對話</h2><span class="case-meta" id="caseMeta">案件 BP-2026-0828 · 王小姐</span></div>
+        <div class="panel-head"><h2 id="conversationTitle">客服對話</h2><span class="case-meta" id="caseMeta">王小姐</span></div>
         <div class="messages" id="messages">
           <div class="message agent"><div class="bubble">您好，我是 BankPilot。我可以協助查詢交易、處理卡片安全問題，或追蹤貸款案件。今天想先處理什麼呢？</div><small>BankPilot · Triage Agent</small></div>
           <div class="message user"><div class="bubble">我剛剛看到一筆不是我刷的 8,800 元交易，請幫我處理。</div><small>剛剛</small></div>
@@ -235,7 +235,7 @@
         { match: /害怕|擔心|焦慮|急|很緊張/, reply: '我理解看到陌生交易會讓人不安。先放心，我們會先完成身分確認，不會在未經您同意下停卡或改變帳戶狀態。' },
         { match: /盜刷|不是我|陌生|可疑|被盜/, reply: '我了解，這確實需要優先處理。我先幫您確認交易細節；若確認不是本人授權，下一步會先請您明確同意停卡，再建立爭議款案件。' },
         { match: /交易|扣款|轉帳|刷卡/, reply: '我可以幫您查詢模擬交易。為了縮小範圍，請告訴我大約的金額、日期，或商店名稱其中一項。' },
-        { match: /貸款|房貸|進度/, reply: '我可以協助查詢貸款案件進度。請提供案件編號，或告訴我您想確認的是審核、補件還是撥款狀態。' },
+        { match: /貸款|房貸|進度/, reply: '我可以協助查詢貸款申請進度。請告訴我您想確認的是審核、補件還是撥款狀態。' },
         { match: /掛失|停卡|鎖卡/, reply: '可以協助您處理，但停卡會改變帳戶狀態，我會先確認卡片與身分，最後再請您明確核准。這張卡目前是遺失，還是看到可疑交易？' },
         { match: /真人|客服|專人/, reply: '當然可以。我會先把目前的對話、已完成的驗證與問題摘要整理好，再轉交真人客服，您不用重新說一次。' }
       ];
@@ -252,7 +252,7 @@
       avatarState('idle');
       document.querySelector('.status').innerHTML = `<span class="dot"></span>${personal ? '個人助理服務已就緒' : '模擬銀行 API 已連線'}`;
       document.querySelector('#conversationTitle').textContent = personal ? '個人助理對話' : '客服對話';
-      document.querySelector('#caseMeta').textContent = personal ? '工作區 PA-2026-0904 · Eason' : '案件 BP-2026-0828 · 王小姐';
+      document.querySelector('#caseMeta').textContent = personal ? 'Eason' : '王小姐';
       document.querySelector('#brandSubtitle').textContent = personal ? 'Your calm command center for everyday tasks' : 'AI Agent Team for trusted banking support';
       document.querySelector('#sideStatusTitle').textContent = personal ? '助理工作狀態' : '案件風險評估';
       document.querySelector('#riskScore').textContent = personal ? '就緒' : '86 / 100';
@@ -272,7 +272,7 @@
     document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => ({ fraud:fraudFlow, transactions, human:humanFlow }[button.dataset.action])()));
     document.querySelector('#send').addEventListener('click', () => { const text = input.value.trim(); if (!text) return; addMessage(text, 'user'); avatarState('thinking'); input.value = ''; setTimeout(() => { const reply = getHumanReply(text); addMessage(reply, 'agent', mode === 'personal' ? 'Personal Assistant' : 'Triage Agent'); addLog(mode === 'personal' ? 'Personal Assistant' : 'Triage Agent', '理解客戶語氣與意圖 · 已選擇對應工作流程'); }, 450); });
     input.addEventListener('keydown', event => { if (event.key === 'Enter') document.querySelector('#send').click(); });
-    approve.addEventListener('click', () => { approve.disabled = true; approve.textContent = '流程已完成'; addMessage('停卡已完成，爭議款案件 BP-DISPUTE-4821 已建立。我們已將處理摘要寄送至您的註冊信箱。', 'agent', 'Workflow Agent'); addLog('Workflow Agent', '停卡成功 · 建立爭議款 BP-DISPUTE-4821'); });
+    approve.addEventListener('click', () => { approve.disabled = true; approve.textContent = '流程已完成'; addMessage('停卡已完成，爭議款案件已建立。我們已將處理摘要寄送至您的註冊信箱。', 'agent', 'Workflow Agent'); addLog('Workflow Agent', '停卡成功 · 建立爭議款案件'); });
   </script>
 </body>
 </html>
