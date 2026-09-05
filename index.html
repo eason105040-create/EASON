@@ -210,6 +210,33 @@
       const [request, reply, agent, detail] = flows[action];
       addMessage(request, 'user'); avatarState('thinking'); setTimeout(() => { addMessage(reply, 'agent', agent); addLog(agent, detail); }, 450);
     }
+    function getHumanReply(text) {
+      const personalReplies = [
+        { match: /你好|嗨|哈囉|早安|晚安/, reply: '你好，很高興見到你。我會陪你把事情一步一步整理好。今天想先處理行程、提醒，還是記下一件事？' },
+        { match: /謝謝|感謝|辛苦了/, reply: '不客氣，能幫上忙就好。還有其他事情想一起處理嗎？' },
+        { match: /累|忙|焦慮|煩|不知道從哪/, reply: '聽起來你今天有點忙亂，先不用一次想完。我可以先幫你整理待辦，再一起找出最重要的一件事。' },
+        { match: /提醒|記得|明天/, reply: '可以，我來幫你建立提醒。請告訴我「什麼時間」要提醒，以及「要提醒什麼事」？' },
+        { match: /行程|安排|待辦|日程/, reply: '我可以幫你整理今天的安排。目前看到 3 個待辦，你想先看完整清單，還是先處理最急的一件？' },
+        { match: /備忘|記錄|記下/, reply: '沒問題，我可以幫你記下來。請直接告訴我想保存的內容，我會替你整理成清楚的一句話。' },
+        { match: /取消|不用了|算了/, reply: '好的，我先不做任何變更。之後想繼續時直接告訴我就可以。' },
+        { match: /幫我|可以嗎|能不能/, reply: '可以，我會先了解你的目標，再幫你找最省力的處理方式。你希望最後完成什麼結果？' }
+      ];
+      const bankingReplies = [
+        { match: /你好|嗨|哈囉|早安|晚安/, reply: '您好，很高興為您服務。我會先了解狀況，再協助您安全地處理。請問今天最需要幫忙的是哪一件事？' },
+        { match: /謝謝|感謝|辛苦了/, reply: '不客氣，這件事交給我一起確認。若還有其他交易或帳戶問題，也可以接著告訴我。' },
+        { match: /害怕|擔心|焦慮|急|很緊張/, reply: '我理解看到陌生交易會讓人不安。先放心，我們會先完成身分確認，不會在未經您同意下停卡或改變帳戶狀態。' },
+        { match: /盜刷|不是我|陌生|可疑|被盜/, reply: '我了解，這確實需要優先處理。我先幫您確認交易細節；若確認不是本人授權，下一步會先請您明確同意停卡，再建立爭議款案件。' },
+        { match: /交易|扣款|轉帳|刷卡/, reply: '我可以幫您查詢模擬交易。為了縮小範圍，請告訴我大約的金額、日期，或商店名稱其中一項。' },
+        { match: /貸款|房貸|進度/, reply: '我可以協助查詢貸款案件進度。請提供案件編號，或告訴我您想確認的是審核、補件還是撥款狀態。' },
+        { match: /掛失|停卡|鎖卡/, reply: '可以協助您處理，但停卡會改變帳戶狀態，我會先確認卡片與身分，最後再請您明確核准。這張卡目前是遺失，還是看到可疑交易？' },
+        { match: /真人|客服|專人/, reply: '當然可以。我會先把目前的對話、已完成的驗證與問題摘要整理好，再轉交真人客服，您不用重新說一次。' }
+      ];
+      const replies = mode === 'personal' ? personalReplies : bankingReplies;
+      const match = replies.find(item => item.match.test(text));
+      return match ? match.reply : mode === 'personal'
+        ? '我想先確認你的需要，才不會替你做錯事。你是想整理行程、建立提醒，還是記錄一則備忘？'
+        : '我會幫您一起釐清，不用急著猜原因。您可以告訴我發生的時間、金額或畫面上看到的訊息，我再協助判斷下一步。';
+    }
     function setMode(nextMode) {
       mode = nextMode;
       modeButtons.forEach(button => button.classList.toggle('active', button.dataset.mode === mode));
@@ -235,7 +262,7 @@
     }
     modeButtons.forEach(button => button.addEventListener('click', () => setMode(button.dataset.mode)));
     document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => ({ fraud:fraudFlow, transactions, human:humanFlow }[button.dataset.action])()));
-    document.querySelector('#send').addEventListener('click', () => { const text = input.value.trim(); if (!text) return; addMessage(text, 'user'); avatarState('thinking'); input.value = ''; setTimeout(() => { const reply = mode === 'personal' ? (/提醒|記得|明天/.test(text) ? '我可以替你建立提醒。請告訴我具體日期、時間，以及要提醒的內容。' : /行程|安排|待辦/.test(text) ? '我正在整理你的今日安排，目前有 3 個待辦事項。你也可以使用下方快捷操作查看。' : '我可以協助整理行程、建立提醒，或記錄備忘。請直接告訴我想完成的事情。') : (/交易|扣款|轉帳/.test(text) ? '我正在使用 Banking Agent 查詢模擬交易資料。為了保護您的帳戶，涉及停卡或資金異動的操作仍需要您的明確確認。' : '我已將需求交給 Triage Agent 分析。這個 Demo 可以協助交易查詢、疑似盜刷處理，或轉接真人客服。'); addMessage(reply, 'agent', mode === 'personal' ? 'Personal Assistant' : 'Triage Agent'); addLog(mode === 'personal' ? 'Personal Assistant' : 'Triage Agent', '分析客戶訊息 · 已選擇對應工作流程'); }, 450); });
+    document.querySelector('#send').addEventListener('click', () => { const text = input.value.trim(); if (!text) return; addMessage(text, 'user'); avatarState('thinking'); input.value = ''; setTimeout(() => { const reply = getHumanReply(text); addMessage(reply, 'agent', mode === 'personal' ? 'Personal Assistant' : 'Triage Agent'); addLog(mode === 'personal' ? 'Personal Assistant' : 'Triage Agent', '理解客戶語氣與意圖 · 已選擇對應工作流程'); }, 450); });
     input.addEventListener('keydown', event => { if (event.key === 'Enter') document.querySelector('#send').click(); });
     approve.addEventListener('click', () => { approve.disabled = true; approve.textContent = '流程已完成'; addMessage('停卡已完成，爭議款案件 BP-DISPUTE-4821 已建立。我們已將處理摘要寄送至您的註冊信箱。', 'agent', 'Workflow Agent'); addLog('Workflow Agent', '停卡成功 · 建立爭議款 BP-DISPUTE-4821'); });
   </script>
