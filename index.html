@@ -64,12 +64,21 @@
     .avatar.thinking .orb-pin::before { animation:blink .55s ease-in-out infinite alternate; }
     .avatar.speaking { animation:speak .38s ease-in-out infinite alternate; }
     .avatar.speaking .dot-matrix i.lit { animation:pulse-dot .38s ease-in-out infinite alternate; }
+    .avatar.idle .avatar-orb { animation:idle-glow 3.2s ease-in-out infinite; }
+    .avatar.idle .orb-ring { animation:idle-scan 3.2s ease-in-out infinite; }
+    .avatar.idle .dot-matrix i.lit { animation:idle-dot 2.4s ease-in-out infinite; }
+    .avatar.idle .dot-matrix i:nth-child(2n).lit { animation-delay:.35s; }
+    .avatar.idle .dot-matrix i:nth-child(3n).lit { animation-delay:.7s; }
     .avatar.personal .avatar-orb { background:#7c4935; }
     @keyframes float { 50% { transform:translateY(-5px) rotateY(5deg); } }
     @keyframes think { 50% { transform:translateY(-4px) rotateY(-12deg) rotateZ(-3deg); } }
     @keyframes speak { from { transform:translateY(0) scaleY(1); } to { transform:translateY(-3px) scaleY(1.035); } }
+    @keyframes idle-glow { 50% { box-shadow:inset -13px -15px 0 rgba(58,25,13,.24), inset 8px 8px 0 rgba(255,238,215,.22), var(--shadow-x,9px) var(--shadow-y,14px) 0 rgba(74,39,20,var(--shadow-opacity,.16)), 0 0 20px rgba(255,208,163,.28); } }
+    @keyframes idle-scan { 0%,100% { opacity:.45; transform:rotateX(68deg) rotateZ(-10deg) scale(.92); } 50% { opacity:.95; transform:rotateX(68deg) rotateZ(-10deg) scale(1.08); } }
+    @keyframes idle-dot { 0%,100% { opacity:.55; box-shadow:0 0 2px #ffd0a3; } 50% { opacity:1; box-shadow:0 0 9px #ffd0a3; } }
     @keyframes blink { to { background:#fff; box-shadow:0 0 0 4px #555,0 0 13px #fff; } }
     @keyframes pulse-dot { to { transform:scale(1.3); } }
+    @media (prefers-reduced-motion:reduce) { .avatar, .avatar.idle .avatar-orb, .avatar.idle .orb-ring, .avatar.idle .dot-matrix i.lit { animation:none; } }
     .risk { display:flex; justify-content:space-between; align-items:center; padding-bottom:16px; border-bottom:1px solid var(--line); }
     .risk strong { display:block; margin-top:4px; font:700 21px Arial,sans-serif; }
     .risk-badge { padding:6px 9px; border-radius:3px; color:#333; background:#e1e1e1; font:700 11px Arial,sans-serif; }
@@ -102,7 +111,7 @@
     </header>
     <main>
       <section class="panel conversation">
-        <div class="avatar-stage" id="avatarStage" aria-label="BankPilot 3D 點矩陣球體助理模型"><span class="avatar-label">Live Agent Form</span><span class="avatar-status" id="avatarStatus">待命中</span><div class="avatar" id="avatar"><div class="orb-pin"></div><div class="avatar-orb"><div class="dot-matrix" id="dotMatrix"></div><div class="orb-title">BankPilot</div><div class="orb-ring"></div></div></div></div>
+        <div class="avatar-stage" id="avatarStage" aria-label="BankPilot 3D 點矩陣球體助理模型"><span class="avatar-label">Live Agent Form</span><span class="avatar-status" id="avatarStatus">待命中</span><div class="avatar idle" id="avatar"><div class="orb-pin"></div><div class="avatar-orb"><div class="dot-matrix" id="dotMatrix"></div><div class="orb-title">BankPilot</div><div class="orb-ring"></div></div></div></div>
         <div class="panel-head"><h2 id="conversationTitle">客服對話</h2><span class="case-meta" id="caseMeta">案件 BP-2026-0828 · 王小姐</span></div>
         <div class="messages" id="messages">
           <div class="message agent"><div class="bubble">您好，我是 BankPilot。我可以協助查詢交易、處理卡片安全問題，或追蹤貸款案件。今天想先處理什麼呢？</div><small>BankPilot · Triage Agent</small></div>
