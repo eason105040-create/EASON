@@ -111,7 +111,7 @@
           <div class="message agent"><div class="bubble">身分驗證已完成。我找到一筆今日 14:32、商店「NOVA DIGITAL」、金額 NT$8,800 的待授權交易。您要暫停此卡並建立爭議款案件嗎？</div><small>Banking Agent · Verification Agent</small></div>
         </div>
         <div class="composer">
-          <div class="quick-actions" id="quickActions"><button data-action="fraud">確認停卡並建案</button><button data-action="transactions">查詢最近交易</button><button data-action="human">轉接真人客服</button></div>
+          <div class="quick-actions" id="quickActions"><button data-action="fraud">確認停卡並建案</button><button data-action="transactions">查詢最近交易</button></div>
           <div class="input-row"><input id="input" placeholder="輸入您的問題，例如：我想查最近一筆轉帳" autocomplete="off"><button class="send" id="send">送出</button></div>
         </div>
       </section>
@@ -255,7 +255,7 @@
       document.querySelector('#meter').style.background = personal ? 'var(--green)' : 'var(--red)';
       checks.innerHTML = personal ? '<li><span class="check">✓</span>今日行程已同步</li><li><span class="check">✓</span>提醒服務可用</li><li><span class="check">✓</span>個人筆記已連線</li>' : '<li><span class="check">✓</span>意圖分類：疑似盜刷</li><li><span class="check">✓</span>多因素身分驗證</li><li><span class="check pending">!</span>等待客戶確認停卡</li>';
       document.querySelector('#approvalPanel').hidden = personal;
-      quickActions.innerHTML = personal ? '<button data-personal="agenda">整理今日安排</button><button data-personal="reminder">建立明日提醒</button><button data-personal="note">記錄一則備忘</button>' : '<button data-action="fraud">確認停卡並建案</button><button data-action="transactions">查詢最近交易</button><button data-action="human">轉接真人客服</button>';
+      quickActions.innerHTML = personal ? '<button data-personal="agenda">整理今日安排</button><button data-personal="reminder">建立明日提醒</button><button data-personal="note">記錄一則備忘</button>' : '<button data-action="fraud">確認停卡並建案</button><button data-action="transactions">查詢最近交易</button>';
       quickActions.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => ({ fraud:fraudFlow, transactions, human:humanFlow }[button.dataset.action])()));
       quickActions.querySelectorAll('[data-personal]').forEach(button => button.addEventListener('click', () => personalFlow(button.dataset.personal)));
       if (personal) addMessage('你好，我是你的個人助理。我可以整理行程、建立提醒，也能把想法記成備忘。今天先從哪件事開始？', 'agent', 'Personal Assistant');
