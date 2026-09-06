@@ -91,7 +91,7 @@ Orchestrator / Triage Agent
 
 ### 公開網址
 
-部署完成後可直接開啟：[BankPilot 公開 Demo](https://eason105040-create.github.io/EASON/)
+部署完成後可直接開啟：[BankPilot 公開 Demo](https://eason105040-create.github.io/EASON/ )
 
 ### 本機啟動方式
 
