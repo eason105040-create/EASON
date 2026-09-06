@@ -89,7 +89,11 @@ Orchestrator / Triage Agent
 
 本專案包含一個不需要安裝套件的互動原型：[index.html](index.html)
 
-### 啟動方式
+### 公開網址
+
+部署完成後可直接開啟：[BankPilot 公開 Demo](https://eason105040-create.github.io/EASON/)
+
+### 本機啟動方式
 
 在專案目錄執行：
 
