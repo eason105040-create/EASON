@@ -101,7 +101,7 @@ Orchestrator / Triage Agent
 python3 -m http.server 4173
 ```
 
-接著開啟 <http://localhost:4173>。
+接著開啟 https://eason105040-create.github.io/EASON/。
 
 ### Demo 展示順序
 
