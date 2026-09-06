@@ -91,17 +91,13 @@ Orchestrator / Triage Agent
 
 ### 公開網址
 
-部署完成後可直接開啟：[BankPilot 公開 Demo](https://eason105040-create.github.io/EASON/ )
+部署完成後可直接開啟：[BankPilot 公開 Demo](https://eason105040-create.github.io/EASON/)
 
-### 本機啟動方式
+### 開啟方式
 
-在專案目錄執行：
+直接開啟公開 Demo：
 
-```bash
-python3 -m http.server 4173
-```
-
-接著開啟 https://eason105040-create.github.io/EASON/。
+[BankPilot 公開 Demo](https://eason105040-create.github.io/EASON/)
 
 ### Demo 展示順序
 
