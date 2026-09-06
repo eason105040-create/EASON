@@ -93,6 +93,10 @@ Orchestrator / Triage Agent
 
 部署完成後可直接開啟：[BankPilot 公開 Demo](https://eason105040-create.github.io/EASON/)
 
+### 講解影片
+
+[BankPilot 講解影片](https://youtu.be/-0234AayH3U)
+
 ### 開啟方式
 
 直接開啟公開 Demo：
